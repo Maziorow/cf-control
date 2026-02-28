@@ -1,0 +1,6 @@
+# ROS
+logs/
+rosbags/
+
+# Python
+__pycache__/

@@ -1,0 +1,27 @@
+{
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
+        },
+        "editor.tabSize": 4
+    },
+    "flake8.args": [
+        "--max-line-length",
+        "99",
+        "--inline-quotes",
+        "single",
+        "--extend-ignore",
+        "E203"
+    ],
+    "flake8.enabled": true,
+    "ruff.configuration": {
+        "format": {
+            "quote-style": "single"
+        }
+    },
+    "ruff.lineLength": 99,
+    "terminal.integrated.suggest.enabled": false
+}
