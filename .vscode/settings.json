@@ -1,4 +1,10 @@
 {
+    "cmake.sourceDirectory": "/home/developer/ros2_ws/src/uav_control",
+    "C_Cpp.clang_format_style": "file:${workspaceFolder}/.clang-format-humble",
+    "[cpp]": {
+        "editor.semanticHighlighting.enabled": true,
+        "editor.tabSize": 2
+    },
     "[python]": {
         "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.formatOnSave": true,
