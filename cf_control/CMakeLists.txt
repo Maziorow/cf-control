@@ -24,9 +24,21 @@ rclcpp_components_register_node(
     EXECUTABLE mixer
 )
 
+add_library(drone_dynamics_lib SHARED src/drone_dynamics.cpp)
+ament_target_dependencies(drone_dynamics_lib rclcpp rclcpp_components cf_control_msgs)
+target_include_directories(drone_dynamics_lib PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+rclcpp_components_register_node(
+    drone_dynamics_lib
+    PLUGIN "evs::cf::DroneDynamics"
+    EXECUTABLE drone_dynamics
+)
+
 # install shared libraries
 install(TARGETS
   mixer_lib
+  drone_dynamics_lib
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib

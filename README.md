@@ -67,7 +67,21 @@ In separate terminal run the ROS wrapper for the CrazyFlie model:
 ros2 run cf_control mixer
 ```
 
-Now, in third terminal, when you run `ros2 topic list` you should see the topic `/cf_control/control_command` listed among others.
+In another separate terminal run the drone dynamics simulator:
+
+```bash
+ros2 run cf_control drone_dynamics
+```
+
+Drone parameters can be overridden via ROS 2 parameters, e.g.:
+
+```bash
+ros2 run cf_control drone_dynamics --ros-args -p mass:=0.027 -p ixx:=1.4e-5 -p iyy:=1.4e-5 -p izz:=2.17e-5 -p gravity:=9.81 -p simulation_rate:=1000.0 -p initial_position.x:=0.0 -p initial_position.y:=0.0 -p initial_position.z:=0.0
+```
+
+The node subscribes to `/drone_dynamics/control_command` (`cf_control_msgs/msg/ThrustAndTorque`) and publishes the simulated state to `/drone_dynamics/drone_state` (`cf_control_msgs/msg/DroneState`), containing position, velocity, orientation (quaternion) and angular velocity.
+
+Now, in the next terminal, when you run `ros2 topic list` you should see the topic `/cf_control/control_command` listed among others.
 This is the input control interface for your algorithm - there you should publish control as collective thrust with torque.
 You can check if it working by invoking the following command:
 
