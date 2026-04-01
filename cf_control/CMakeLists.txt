@@ -35,10 +35,22 @@ rclcpp_components_register_node(
     EXECUTABLE drone_dynamics
 )
 
+add_library(drone_dynamics_lib SHARED src/flatness.cpp)
+ament_target_dependencies(drone_dynamics_lib rclcpp rclcpp_components cf_control_msgs)
+target_include_directories(drone_dynamics_lib PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+rclcpp_components_register_node(
+    flatness_lib
+    PLUGIN "evs::cf::Flatness"
+    EXECUTABLE flatness
+)
+
 # install shared libraries
 install(TARGETS
   mixer_lib
   drone_dynamics_lib
+  flatness_lib
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
