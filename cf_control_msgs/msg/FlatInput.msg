@@ -3,7 +3,7 @@ uint64 timestamp
 geometry_msgs/Point position
 float64 yaw
 
-geometry_msgs/Point velocity
+geometry_msgs/Vector3 velocity
 float64 yaw_velocity
 
 geometry_msgs/Point acceleration
