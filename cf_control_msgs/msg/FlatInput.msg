@@ -9,7 +9,7 @@ float64 yaw_velocity
 geometry_msgs/Point acceleration
 float64 yaw_acceleration
 
-geometry_msgs/Point acceleration
+geometry_msgs/Point jerk
 float64 yaw_jerk
 
 geometry_msgs/Point snap
