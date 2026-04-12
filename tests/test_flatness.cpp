@@ -11,8 +11,6 @@
 
 using namespace evs::cf;
 
-// ── CSV row ────────────────────────────────────────────────────────────────
-
 struct TestRow {
   std::string name;
   FlatInputVec  input;
@@ -48,7 +46,7 @@ static std::vector<TestRow> load_csv(const std::string & path)
 
   std::vector<TestRow> rows;
   std::string line;
-  std::getline(f, line);  // discard header
+  std::getline(f, line);
 
   while (std::getline(f, line)) {
     if (line.empty()) continue;
@@ -64,7 +62,6 @@ static std::vector<TestRow> load_csv(const std::string & path)
     TestRow r;
     r.name = tok[0];
 
-    // ── Input vector ──────────────────────────────────────────────────────
     namespace fi = flat_in;
     r.input[fi::POS_X]  = d(1);  r.input[fi::POS_Y]  = d(2);  r.input[fi::POS_Z]  = d(3);
     r.input[fi::VEL_X]  = d(4);  r.input[fi::VEL_Y]  = d(5);  r.input[fi::VEL_Z]  = d(6);
@@ -78,7 +75,6 @@ static std::vector<TestRow> load_csv(const std::string & path)
     r.input[fi::GRAVITY] = d(20);
     r.input[fi::IXX] = d(21); r.input[fi::IYY] = d(22); r.input[fi::IZZ] = d(23);
 
-    // ── Expected output vector ────────────────────────────────────────────
     namespace fo = flat_out;
     r.expected[fo::POS_X] = d(24); r.expected[fo::POS_Y] = d(25); r.expected[fo::POS_Z] = d(26);
     r.expected[fo::QW] = d(27); r.expected[fo::QX] = d(28);
@@ -92,8 +88,6 @@ static std::vector<TestRow> load_csv(const std::string & path)
   }
   return rows;
 }
-
-// ── Parameterised test ────────────────────────────────────────────────────
 
 class FlatnessTest : public ::testing::TestWithParam<TestRow> {};
 
@@ -118,7 +112,6 @@ TEST_P(FlatnessTest, OutputsMatchExpected)
   EXPECT_NEAR(y[fo::QY], row.expected[fo::QY], kTol);
   EXPECT_NEAR(y[fo::QZ], row.expected[fo::QZ], kTol);
 
-  // Unit-norm sanity
   double q_norm = std::sqrt(
     y[fo::QW]*y[fo::QW] + y[fo::QX]*y[fo::QX] +
     y[fo::QY]*y[fo::QY] + y[fo::QZ]*y[fo::QZ]);

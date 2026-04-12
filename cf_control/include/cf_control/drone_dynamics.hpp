@@ -26,7 +26,7 @@ private:
     const std::array<double, 13> & state,
     double T, double tau_x, double tau_y, double tau_z);
 
-  std::array<double, 13> euler_step(
+  std::array<double, 13> rk4_step(
     const std::array<double, 13> & state,
     double T, double tau_x, double tau_y, double tau_z,
     double dt);

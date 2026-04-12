@@ -87,21 +87,35 @@ std::array<double, 13> DroneDynamics::compute_derivatives(
   return ds;
 }
 
-std::array<double, 13> DroneDynamics::euler_step(
+std::array<double, 13> DroneDynamics::rk4_step(
   const std::array<double, 13> & state,
   double T, double tau_x, double tau_y, double tau_z,
   double dt)
 {
-  auto ds = compute_derivatives(state, T, tau_x, tau_y, tau_z);
+  // Standard RK4: k1..k4 are derivative evaluations at state, mid-points, and end.
+  // Control inputs T, tau_* are held constant over the step (zero-order hold).
+  auto add = [](const std::array<double, 13> & a,
+                double h,
+                const std::array<double, 13> & b) {
+    std::array<double, 13> out{};
+    for (size_t i = 0; i < 13; ++i) out[i] = a[i] + h * b[i];
+    return out;
+  };
+
+  const auto k1 = compute_derivatives(state,              T, tau_x, tau_y, tau_z);
+  const auto k2 = compute_derivatives(add(state, dt/2, k1), T, tau_x, tau_y, tau_z);
+  const auto k3 = compute_derivatives(add(state, dt/2, k2), T, tau_x, tau_y, tau_z);
+  const auto k4 = compute_derivatives(add(state, dt,   k3), T, tau_x, tau_y, tau_z);
 
   std::array<double, 13> next{};
   for (size_t i = 0; i < 13; ++i) {
-    next[i] = state[i] + dt * ds[i];
+    next[i] = state[i] + (dt / 6.0) * (k1[i] + 2*k2[i] + 2*k3[i] + k4[i]);
   }
 
+  // Re-normalise quaternion (indices 6-9) to prevent drift.
   const double q_norm = std::sqrt(
-    next[6] * next[6] + next[7] * next[7] +
-    next[8] * next[8] + next[9] * next[9]);
+    next[6]*next[6] + next[7]*next[7] +
+    next[8]*next[8] + next[9]*next[9]);
   next[6] /= q_norm;
   next[7] /= q_norm;
   next[8] /= q_norm;
@@ -121,7 +135,7 @@ void DroneDynamics::process()
     tau_z = tau_z_;
   }
 
-  state_ = euler_step(state_, T, tau_x, tau_y, tau_z, dt_);
+  state_ = rk4_step(state_, T, tau_x, tau_y, tau_z, dt_);
 
   auto msg = cf_control_msgs::msg::DroneState();
   msg.timestamp = this->now().nanoseconds();
