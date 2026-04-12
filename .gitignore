@@ -4,3 +4,5 @@ rosbags/
 
 # Python
 __pycache__/
+
+**/*build/**
