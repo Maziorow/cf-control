@@ -94,7 +94,7 @@ class FlatnessTest : public ::testing::TestWithParam<TestRow> {};
 TEST_P(FlatnessTest, OutputsMatchExpected)
 {
   const TestRow & row = GetParam();
-  constexpr double kTol = 1e-2;
+  constexpr double kTol = 1e-4;
   namespace fo = flat_out;
 
   const FlatOutputVec y = compute_flatness(row.input);
