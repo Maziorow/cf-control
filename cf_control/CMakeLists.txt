@@ -46,11 +46,23 @@ rclcpp_components_register_node(
     EXECUTABLE flatness
 )
 
+add_library(lee_controller_lib SHARED src/lee_controller.cpp)
+ament_target_dependencies(lee_controller_lib rclcpp rclcpp_components cf_control_msgs)
+target_include_directories(lee_controller_lib PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+rclcpp_components_register_node(
+    lee_controller_lib
+    PLUGIN "evs::cf::LeeController"
+    EXECUTABLE lee_controller
+)
+
 # install shared libraries
 install(TARGETS
   mixer_lib
   drone_dynamics_lib
   flatness_lib
+  lee_controller_lib
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib

@@ -14,6 +14,7 @@ set(msg_files
   "msg/ThrustAndTorque.msg"
   "msg/DroneState.msg"
   "msg/FlatInput.msg"
+  "msg/TrajectorySetpoint.msg"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}
