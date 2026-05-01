@@ -62,6 +62,30 @@ def generate_launch_description():
         output='screen',
     )
 
+    odom_to_drone_state = Node(
+        package='cf_control',
+        executable='odom_to_drone_state',
+        output='screen',
+    )
+
+    round_trajectory = Node(
+        package='cf_control',
+        executable='round_trajectory',
+        output='screen',
+    )
+
+    lee_controller = Node(
+        package='cf_control',
+        executable='lee_controller',
+        output='screen',
+    )
+
+    mixer = Node(
+        package='cf_control',
+        executable='mixer',
+        output='screen',
+    )
+
     # control = Node(
     #     package='ros_gz_crazyflie_control',
     #     executable='control_services',
@@ -79,6 +103,10 @@ def generate_launch_description():
             gz_ln_arg,
             gz_sim,
             bridge,
+            odom_to_drone_state,
+            round_trajectory,
+            lee_controller,
+            mixer,
             # control
         ]
     )

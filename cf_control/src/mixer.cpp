@@ -54,7 +54,7 @@ Mixer::Mixer(const rclcpp::NodeOptions & options)
   motor_command_publisher_ =
     this->create_publisher<actuator_msgs::msg::Actuators>("/crazyflie/motor_speed", 10);
   control_command_subscriber_ = this->create_subscription<cf_control_msgs::msg::ThrustAndTorque>(
-    "/cf_control/control_command", 10,
+    "control_command", 10,
     std::bind(&Mixer::control_command_callback, this, std::placeholders::_1));
 
   // Kick off the processing function at the specified rate

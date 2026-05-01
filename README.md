@@ -61,7 +61,22 @@ Run the simulation with:
 ros2 launch ros_gz_crazyflie_bringup crazyflie_simulation.launch.py
 ```
 
-In separate terminal run the ROS wrapper for the CrazyFlie model:
+This launch starts the full Gazebo control chain:
+
+- `ros_gz_bridge`
+- `odom_to_drone_state`
+- `round_trajectory`
+- `lee_controller`
+- `mixer`
+
+The topic flow is:
+
+```text
+/crazyflie/odom -> odom_to_drone_state -> drone_state
+round_trajectory -> trajectory_setpoint -> lee_controller -> control_command -> mixer -> /crazyflie/motor_speed
+```
+
+If you want to run the ROS wrapper for the CrazyFlie model manually instead:
 
 ```bash
 ros2 run cf_control mixer
@@ -79,14 +94,13 @@ Drone parameters can be overridden via ROS 2 parameters, e.g.:
 ros2 run cf_control drone_dynamics --ros-args -p mass:=0.027 -p ixx:=1.4e-5 -p iyy:=1.4e-5 -p izz:=2.17e-5 -p gravity:=9.81 -p simulation_rate:=1000.0 -p initial_position.x:=0.0 -p initial_position.y:=0.0 -p initial_position.z:=0.0
 ```
 
-The node subscribes to `/drone_dynamics/control_command` (`cf_control_msgs/msg/ThrustAndTorque`) and publishes the simulated state to `/drone_dynamics/drone_state` (`cf_control_msgs/msg/DroneState`), containing position, velocity, orientation (quaternion) and angular velocity.
+The legacy `drone_dynamics` node subscribes to `control_command` (`cf_control_msgs/msg/ThrustAndTorque`) and publishes `drone_state` (`cf_control_msgs/msg/DroneState`), containing position, velocity, orientation (quaternion) and angular velocity.
 
-Now, in the next terminal, when you run `ros2 topic list` you should see the topic `/cf_control/control_command` listed among others.
-This is the input control interface for your algorithm - there you should publish control as collective thrust with torque.
-You can check if it working by invoking the following command:
+In the Gazebo workflow, `lee_controller` publishes `control_command` and `mixer` forwards it to `/crazyflie/motor_speed`.
+In the legacy standalone workflow, you can still publish control manually to check the mixer by invoking:
 
 ```bash
-ros2 topic pub /cf_control/control_command cf_control_msgs/msg/ThrustAndTorque "{collective_thrust: 0.295}"
+ros2 topic pub /control_command cf_control_msgs/msg/ThrustAndTorque "{collective_thrust: 0.295}"
 ```
 
 Your drone should take off in the simulation 🙂

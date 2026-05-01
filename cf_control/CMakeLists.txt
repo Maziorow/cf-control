@@ -11,6 +11,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(actuator_msgs REQUIRED)
 find_package(cf_control_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 
 # libraries
 add_library(mixer_lib SHARED src/mixer.cpp)
@@ -57,12 +58,36 @@ rclcpp_components_register_node(
     EXECUTABLE lee_controller
 )
 
+add_library(round_trajectory_lib SHARED src/round_trajectory.cpp)
+ament_target_dependencies(round_trajectory_lib rclcpp rclcpp_components cf_control_msgs)
+target_include_directories(round_trajectory_lib PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+rclcpp_components_register_node(
+    round_trajectory_lib
+    PLUGIN "evs::cf::RoundTrajectory"
+    EXECUTABLE round_trajectory
+)
+
+add_library(odom_to_drone_state_lib SHARED src/odom_to_drone_state.cpp)
+ament_target_dependencies(odom_to_drone_state_lib rclcpp rclcpp_components cf_control_msgs nav_msgs)
+target_include_directories(odom_to_drone_state_lib PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+rclcpp_components_register_node(
+    odom_to_drone_state_lib
+    PLUGIN "evs::cf::OdomToDroneState"
+    EXECUTABLE odom_to_drone_state
+)
+
 # install shared libraries
 install(TARGETS
   mixer_lib
   drone_dynamics_lib
   flatness_lib
   lee_controller_lib
+  round_trajectory_lib
+  odom_to_drone_state_lib
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
