@@ -12,9 +12,9 @@ RoundTrajectory::RoundTrajectory(const rclcpp::NodeOptions & options)
 : Node("round_trajectory", options),
   started_(false)
 {
-  declare_parameter("radius", 5.0);
-  declare_parameter("altitude", 0.3);
-  declare_parameter("angular_speed", 0.5);
+  declare_parameter("radius", 1.0);
+  declare_parameter("altitude", 0.5);
+  declare_parameter("angular_speed", 0.3);
   declare_parameter("center_x", 0.0);
   declare_parameter("center_y", 0.0);
   declare_parameter("yaw", 0.0);
@@ -52,7 +52,7 @@ void RoundTrajectory::process()
   msg.timestamp = this->now().nanoseconds();
   msg.position.x = center_x_ + radius_ * std::cos(phase);
   msg.position.y = center_y_ + radius_ * std::sin(phase);
-  msg.position.z = altitude_;
+  msg.position.z = get_parameter("altitude").as_double();
   msg.velocity.x = -radius_ * angular_speed_ * std::sin(phase);
   msg.velocity.y = radius_ * angular_speed_ * std::cos(phase);
   msg.velocity.z = 0.0;

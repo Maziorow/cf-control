@@ -12,10 +12,10 @@ LeeController::LeeController(const rclcpp::NodeOptions & options)
 : Node("lee_controller", options)
 {
   // Physical parameters
-  declare_parameter("mass", 0.027);
-  declare_parameter("ixx", 1.4e-5);
-  declare_parameter("iyy", 1.4e-5);
-  declare_parameter("izz", 2.17e-5);
+  declare_parameter("mass", 0.025);
+  declare_parameter("ixx", 16.57e-6);
+  declare_parameter("iyy", 16.66e-6);
+  declare_parameter("izz", 29.26e-6);
   declare_parameter("gravity", 9.81);
 
   mass_    = get_parameter("mass").as_double();
@@ -26,9 +26,9 @@ LeeController::LeeController(const rclcpp::NodeOptions & options)
 
   // Control gains
   declare_parameter("kp_pos", 6.0);
-  declare_parameter("kv_pos", 4.0);
-  declare_parameter("kr_att", 8.5e-3);
-  declare_parameter("komega_att", 2.5e-3);
+  declare_parameter("kv_pos", 3.5);
+  declare_parameter("kr_att", 0.025);
+  declare_parameter("komega_att", 0.0065);
 
   kp_pos_     = get_parameter("kp_pos").as_double();
   kv_pos_     = get_parameter("kv_pos").as_double();
