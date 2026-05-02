@@ -118,9 +118,9 @@ inline FlatOutputVec compute_flatness(const FlatInputVec & u)
   double dhdty = -Tdot_T * hy + mT * (u[SNAP_Y] - coeff * zBy - zB_dot_j * hy);
   double dhdtz = -Tdot_T * hz + mT * (u[SNAP_Z] - coeff * zBz - zB_dot_j * hz);
 
-  double alpha_x = -(dhdtx * yBx + dhdty * yBy + dhdtz * yBz);
-  double alpha_y =   dhdtx * xBx + dhdty * xBy + dhdtz * xBz;
-  double alpha_z = u[YAW_ACC] * zBz;
+  double alpha_x = -(dhdtx * yBx + dhdty * yBy + dhdtz * yBz) + y[OMEGA_Y] * y[OMEGA_Z];
+  double alpha_y =  (dhdtx * xBx + dhdty * xBy + dhdtz * xBz) - y[OMEGA_X] * y[OMEGA_Z];
+  double alpha_z = u[YAW_ACC] * zBz + u[YAW_VEL] * (y[OMEGA_Y] * xBz - y[OMEGA_X] * yBz);
 
   y[TORQUE_X] = u[IXX] * alpha_x + (u[IZZ] - u[IYY]) * y[OMEGA_Y] * y[OMEGA_Z];
   y[TORQUE_Y] = u[IYY] * alpha_y + (u[IXX] - u[IZZ]) * y[OMEGA_X] * y[OMEGA_Z];
