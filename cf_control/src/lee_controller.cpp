@@ -27,7 +27,7 @@ LeeController::LeeController(const rclcpp::NodeOptions & options)
   // Control gains
   declare_parameter("kp_pos", 6.0);
   declare_parameter("kv_pos", 3.5);
-  declare_parameter("kr_att", 0.025);
+  declare_parameter("kr_att", 0.03);
   declare_parameter("komega_att", 0.0065);
 
   kp_pos_     = get_parameter("kp_pos").as_double();

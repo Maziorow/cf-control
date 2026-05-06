@@ -12,9 +12,9 @@ RoundTrajectory::RoundTrajectory(const rclcpp::NodeOptions & options)
 : Node("round_trajectory", options),
   started_(false)
 {
-  declare_parameter("radius", 1.0);
-  declare_parameter("altitude", 0.5);
-  declare_parameter("angular_speed", 0.3);
+  declare_parameter("radius", 2.0);
+  declare_parameter("altitude", 1.5);
+  declare_parameter("angular_speed", 0.15);
   declare_parameter("center_x", 0.0);
   declare_parameter("center_y", 0.0);
   declare_parameter("yaw", 0.0);
